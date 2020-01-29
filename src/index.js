@@ -24,10 +24,14 @@ function reqCount (req, res, next ){
 
 server.post('/projects', reqCount, (req, res) => {
 	const { id, title } = req.body
-	const tasks = []
+	const project = {
+		id,
+		title,
+		tasks: []
+	}
 
-	projects.push({id, title, tasks})
-	return res.send({id, title, tasks})
+	projects.push(project)
+	return res.send(project)
 })
 
 server.get('/projects', reqCount, (req, res) => {
@@ -44,9 +48,9 @@ server.put('/projects/:id', checkProjectExists, reqCount, (req, res) => {
 
 server.post('/projects/:id/tasks', checkProjectExists, reqCount, (req, res) => {
 	const { id } = req.params
-	const indice = projects.findIndex(p => p.id == id)
-	projects[indice].tasks.push(req.body.title)
-	return res.json(req.body.title)
+	const project = projects.find(p => p.id == id)
+	project.tasks.push(req.body.title)
+	return res.json(project.tasks)
 })
 
 server.listen(3000)
